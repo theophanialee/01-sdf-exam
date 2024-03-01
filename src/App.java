@@ -32,11 +32,11 @@ public class App {
         List<String> pokemonArrList = fileService.ReadCSV(pokemonFilePath);
 
         System.out.println(pokemonArrList.get(1));
-for (int i = 0; i < pokemonArrList.size(); i++) {
-    List<String> oneStack = new ArrayList<>();
-    oneStack.add(pokemonArrList.get(i));
-    retrievedStacksMap.put(i+1,oneStack);
-}
+        for (int i = 0; i < pokemonArrList.size(); i++) {
+            List<String> oneStack = new ArrayList<>();
+             oneStack.add(pokemonArrList.get(i));
+             retrievedStacksMap.put(i+1,oneStack);
+            }
  
      printHeader();
 
@@ -142,8 +142,14 @@ for (int i = 0; i < pokemonArrList.size(); i++) {
         if (retrievedStacksMap.get(stack) == null){
             System.out.println("This stack is empty. You may select option (4) to add a stack.");
         } else {
-            System.out.println("Stack "+ stack + ": " + retrievedStacksMap.get(stack));
-    
+         
+            String oneStack = retrievedStacksMap.get(stack).get(0);
+            String[] oneStackSplit = oneStack.split(",");
+
+            for (int i = 0; i < oneStackSplit.length; i++) {
+                System.out.println((i+1) + " => " + oneStackSplit[i]);
+            }
+            
         }
     }
 
