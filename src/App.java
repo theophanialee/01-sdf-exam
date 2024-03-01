@@ -33,7 +33,7 @@ public class App {
         //putting into structure Map <Integer, List<String>> 
         List<String> pokemonArrList = fileService.ReadCSV(pokemonFilePath);
 
-        System.out.println(pokemonArrList.get(1));
+        // System.out.println(pokemonArrList.get(1));
         for (int i = 0; i < pokemonArrList.size(); i++) {
             List<String> oneStack = new ArrayList<>();
              oneStack.add(pokemonArrList.get(i));
@@ -167,44 +167,48 @@ public class App {
     public static void printNext5StarsPokemon(String enteredPokemon) {
         // Task 2 - your code here
         String[] enteredArr = enteredPokemon.split("\\*");
-        // String enteredStars = Integer.parseInt(pokemonArr[0]);
+        String enteredStars = enteredArr[0];
         String enteredName = enteredArr[1].trim();
         System.out.println("Searching for 5 stars " + enteredName + "...");
 
- 
         for (Map.Entry <Integer, List<String>> entry : retrievedStacksMap.entrySet()) { 
             System.out.println("Set " + entry.getKey());
             String oneStack = entry.getValue().get(0).replaceAll(" ","");
             String[] oneStackSplit = oneStack.split(",");
 
-            int countFiveStars = 0;
-            int countPokemon = 0;
+            boolean fiveStarsPokeExist = false;
+            boolean pokemonExist = false;
             int cardsCounted = 0;
-            
-            List<String> fiveStarsPokes = new ArrayList<>();
-            List<String> searchedPoke = new ArrayList<>();
-
+           
             for (int i = 0; i < oneStackSplit.length; i++) {
                 String[] onePokemon = oneStackSplit[i].split("\\*");
-                String pokeStars = onePokemon[0];
+                String pokeStars = onePokemon[0].trim();
                 String pokeName = onePokemon[1].trim();
              
                 cardsCounted ++;
 
-               System.out.println("Searched " + pokeName + pokeStars);
-                if (pokeStars == Integer.toString(5) && pokeName == enteredName)  {
-                    System.out.println("5 stars" + pokeName + "found.\n" +  (oneStackSplit.length-cardsCounted) + " cards to go (searched)." );
-                }  
+            //    System.out.println("Searched " + "Name: " + pokeName + " Stars: " + pokeStars);
+                if (pokeStars.equals(Integer.toString(5)) && pokeName.equalsIgnoreCase(enteredName))  {
+                    System.out.println("5* " + pokeName + ">>>" +  (oneStackSplit.length-cardsCounted) + " cards to go. "+cardsCounted+ " cards counted." );
+                    fiveStarsPokeExist = true;
+                } 
+
+                if (pokeName.equalsIgnoreCase(enteredName)) {
+                    pokemonExist = true;
+                }
+             
     } 
-    
-        if (countFiveStars == 0 && countPokemon != 0) {
+        
+        if (!pokemonExist && !fiveStarsPokeExist) {
+            System.out.println(enteredStars + "* " + enteredName + " not found in this set.");
+        } 
+        if (!pokemonExist) {
             System.out.println("No 5 stars " + enteredName +" found subsequently in this stack.");
         } 
-        
-        if (countFiveStars == 0 && countPokemon == 0) {
-            System.out.println(enteredName + "not found in this set.");
-        } 
 
+        fiveStarsPokeExist = false;
+        pokemonExist = false;
+        cardsCounted=0;
     };
 
 
