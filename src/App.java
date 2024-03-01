@@ -3,13 +3,15 @@
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 public class App {
@@ -59,7 +61,6 @@ public class App {
             List<String> value = entry.getValue(); 
             System.out.println(key + ": " + value);
         };
-
                 break;
             case "2":
             //View unique list of Pokemon in the selected stack
@@ -69,10 +70,12 @@ public class App {
             } else {
                 printUniquePokemonStack(stackChoice);
             }
+            pressAnyKeyToContinue();
                 break;
             case "3":
             //Find next 5 stars Pokemon occurrence
-
+            String pokemonInput = cons.readLine("Which Pokemon would you like to search? >");
+            printNext5StarsPokemon(pokemonInput);
          
                 break;
             case "4":
@@ -89,6 +92,11 @@ public class App {
            savePokemonStack(stackInput, saveToPath);
 
                 break;
+
+            case "5":
+            //Print top10 pokemons
+            printPokemonCardCount();
+             break;
           
             default:
                 break;
@@ -107,6 +115,10 @@ public class App {
     // Task 1
     public static void pressAnyKeyToContinue() {
         // your code here
+        System.out.println("Press any key to continue...");
+        Scanner s = new Scanner(System.in);
+        s.nextLine();
+    
     }
 
     // Task 1
@@ -118,6 +130,7 @@ public class App {
         System.out.println("(2) View unique list of Pokemon in the selected stack");
         System.out.println("(3) Find next 5 stars Pokemon occurrence");
         System.out.println("(4) Create new Pokemon stack and save (append) to csv file");
+        System.out.println("(5) Print distinct Pokemons and cards count");
         System.out.println("(q) to exit the program\n");
     }
 
@@ -138,14 +151,11 @@ public class App {
     // Task 2
     public static void printUniquePokemonStack(Integer stack) {
         // Task 2 - your code here
-
         if (retrievedStacksMap.get(stack) == null){
             System.out.println("This stack is empty. You may select option (4) to add a stack.");
         } else {
-         
-            String oneStack = retrievedStacksMap.get(stack).get(0);
+            String oneStack = retrievedStacksMap.get(stack).get(0).replaceAll(" ","");
             String[] oneStackSplit = oneStack.split(",");
-
             for (int i = 0; i < oneStackSplit.length; i++) {
                 System.out.println((i+1) + " => " + oneStackSplit[i]);
             }
@@ -156,44 +166,86 @@ public class App {
     // Task 2
     public static void printNext5StarsPokemon(String enteredPokemon) {
         // Task 2 - your code here
-        String[] enteredArr = enteredPokemon.split("*");
-        // String enteredStars = enteredArr[0];
+        String[] enteredArr = enteredPokemon.split("\\*");
+        // String enteredStars = Integer.parseInt(pokemonArr[0]);
         String enteredName = enteredArr[1].trim();
-        
-        List<String> pokemonArrList = fileService.ReadCSV(pokemonFilePath);
+        System.out.println("Searching for 5 stars " + enteredName + "...");
 
-        int index = 0;
+ 
+        for (Map.Entry <Integer, List<String>> entry : retrievedStacksMap.entrySet()) { 
+            System.out.println("Set " + entry.getKey());
+            String oneStack = entry.getValue().get(0).replaceAll(" ","");
+            String[] oneStackSplit = oneStack.split(",");
 
-        for (String pokemon : pokemonArrList) {
-         System.out.println(pokemon);
-         String[] pokemonArr = enteredPokemon.split("*");
-        int pokeStars = Integer.parseInt(pokemonArr[0]);
-        String pokeName = pokemonArr[1].trim();
-       
-        if (pokeStars == 5 && pokeName == enteredName)  {
-            System.out.println("5 stars" + pokeName + "found.\n" + index + " cards to go (searched)." );
-        }
-
-        index ++;
-     }
-
-    //  if (index == )
+            int countFiveStars = 0;
+            int countPokemon = 0;
+            int cardsCounted = 0;
+            List<String> fiveStarsPokes = new ArrayList<>();
+            List<String> searchedPoke = new ArrayList<>();
 
 
-    //  if (fiveStarsPoke.size() == 0) {
-    //     System.out.println(enteredName + "not found in this set.");
-    // } 
+            for (int i = 0; i < oneStackSplit.length; i++) {
+                String[] onePokemon = oneStackSplit[i].split("\\*");
+                String pokeStars = onePokemon[0];
+                String pokeName = onePokemon[1].trim();
+             
+                cardsCounted ++;
+
+               System.out.println("Searched" + pokeName + pokeStars);
+                if (pokeStars == Integer.toString(5) && pokeName == enteredName)  {
+                    System.out.println("5 stars" + pokeName + "found.\n" +  (oneStackSplit.length-cardsCounted) + " cards to go (searched)." );
+                }  
+    } 
     
-    // else if () {
-    //     System.out.println("No 5 stars " + enteredName +" found subsequently in this stack.");
-    // }
+         if (fiveStarsPokes.size() == 0) {
+            System.out.println("No 5 stars " + enteredName +" found subsequently in this stack.");
+        } if (searchedPoke.size() == 0) {
+            System.out.println(enteredName + "not found in this set.");
+        } 
+
+    };
+
 
     }
 
     // Task 2
     public static void printPokemonCardCount() {
         // Task 2 - your code here
-        
+
+        List<String> pokemonArrList = fileService.ReadCSV(pokemonFilePath);
+        Map<String, Integer> pokeCount = new HashMap<>();
+
+        for (String stack : pokemonArrList) {
+           String cleanStack = stack.replaceAll(" ","");
+            String[] oneStackArr = cleanStack.split(",");
+            for (String pokemon : oneStackArr) {
+                 // key is null, first word does not exist
+                 if (!pokeCount.containsKey(pokemon)) {
+                    pokeCount.putIfAbsent(pokemon, 1);
+                } else {
+                    int frequency = pokeCount.get(pokemon);
+                    pokeCount.put(pokemon, frequency + 1); //updates if the key already exists
+                }
+            
+        }
+    }
+   Map<String,Integer> topTen =
+    pokeCount.entrySet().stream()
+       .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+       .limit(10)
+       .collect(Collectors.toMap(
+          Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+                  
+         int rank = 1;
+            for (Map.Entry<String,Integer> entry : topTen.entrySet()) { 
+            String pokemon = entry.getKey(); 
+            int count = entry.getValue();
+            
+            System.out.println("Pokemon " + rank + ": " + pokemon + ", " + "Cards cout: " + count);
+            rank ++;
+        };
+            }
+
+
     }
 
-}

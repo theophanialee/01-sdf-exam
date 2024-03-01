@@ -39,13 +39,7 @@ public class FileService {
         //create a new file if file does not exist
         
         try {
-            // // Create directories if necessary
-            // Path directoryPath = Paths.get(fullPathFilename).getParent();
-            // if (directoryPath != null) {
-            //     Files.createDirectories(directoryPath);
-            // }
-
-            // Write the content to the file (append if file exists, create new file otherwise)
+       
             try (FileOutputStream fos = new FileOutputStream(file, file.exists())) {
                 fos.write(System.lineSeparator().getBytes());// Optional: add a new line after appending
                 fos.write(pokemons.getBytes());
