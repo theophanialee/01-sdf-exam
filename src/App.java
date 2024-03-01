@@ -138,12 +138,11 @@ for (int i = 0; i < pokemonArrList.size(); i++) {
     // Task 2
     public static void printUniquePokemonStack(Integer stack) {
         // Task 2 - your code here
-        if (currentStack.size() == 0){
+
+        if (retrievedStacksMap.get(stack) == null){
             System.out.println("This stack is empty. You may select option (4) to add a stack.");
         } else {
-            for (String pokemon : currentStack) {
-                System.out.println(pokemon.trim());
-               }
+            System.out.println("Stack "+ stack + ": " + retrievedStacksMap.get(stack));
     
         }
     }
