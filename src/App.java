@@ -21,6 +21,7 @@ public class App {
     public static  String pokemonFilePath = "";
 
     public static void main(String[] args) throws Exception {
+        clearConsole();
 
         if (args.length == 1) {
             pokemonFilePath = args[0];
@@ -52,7 +53,6 @@ public class App {
             case "q":
             printExitMessage();
                 keepGameRunning = false;
-                clearConsole();
                 break;
             case "1":
            //View list of Pokemon in the selected stack
@@ -118,7 +118,6 @@ public class App {
         System.out.println("Press any key to continue...");
         Scanner s = new Scanner(System.in);
         s.nextLine();
-    
     }
 
     // Task 1
@@ -199,10 +198,11 @@ public class App {
              
     } 
         
-        if (!pokemonExist && !fiveStarsPokeExist) {
+    if (pokemonExist==true && fiveStarsPokeExist==true) {
+        break;
+    } else if (pokemonExist==false) {
             System.out.println(enteredStars + "* " + enteredName + " not found in this set.");
-        } 
-        if (!pokemonExist) {
+        }  else if (pokemonExist==true) {
             System.out.println("No 5 stars " + enteredName +" found subsequently in this stack.");
         } 
 
