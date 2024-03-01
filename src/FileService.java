@@ -20,6 +20,9 @@ public class FileService {
       
             while (scan.hasNextLine()) {
                 String pokemonInfo = scan.nextLine();
+                if (pokemonInfo==null) {
+                    continue;
+                }
     
                 pokemonArrList.add(pokemonInfo);
             }
@@ -35,14 +38,14 @@ public class FileService {
         // Task 1 - your code here
         // create a new file and put in the path provided
         File file = new File(fullPathFilename);
-
+        
         //create a new file if file does not exist
         
         try {
        
             try (FileOutputStream fos = new FileOutputStream(file, file.exists())) {
-                fos.write(System.lineSeparator().getBytes());// Optional: add a new line after appending
                 fos.write(pokemons.getBytes());
+                fos.write(System.lineSeparator().getBytes());// Optional: add a new line after appending
             }
 
             if (file.exists()) {

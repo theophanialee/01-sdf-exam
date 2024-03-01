@@ -180,9 +180,9 @@ public class App {
             int countFiveStars = 0;
             int countPokemon = 0;
             int cardsCounted = 0;
+            
             List<String> fiveStarsPokes = new ArrayList<>();
             List<String> searchedPoke = new ArrayList<>();
-
 
             for (int i = 0; i < oneStackSplit.length; i++) {
                 String[] onePokemon = oneStackSplit[i].split("\\*");
@@ -191,15 +191,17 @@ public class App {
              
                 cardsCounted ++;
 
-               System.out.println("Searched" + pokeName + pokeStars);
+               System.out.println("Searched " + pokeName + pokeStars);
                 if (pokeStars == Integer.toString(5) && pokeName == enteredName)  {
                     System.out.println("5 stars" + pokeName + "found.\n" +  (oneStackSplit.length-cardsCounted) + " cards to go (searched)." );
                 }  
     } 
     
-         if (fiveStarsPokes.size() == 0) {
+        if (countFiveStars == 0 && countPokemon != 0) {
             System.out.println("No 5 stars " + enteredName +" found subsequently in this stack.");
-        } if (searchedPoke.size() == 0) {
+        } 
+        
+        if (countFiveStars == 0 && countPokemon == 0) {
             System.out.println(enteredName + "not found in this set.");
         } 
 
